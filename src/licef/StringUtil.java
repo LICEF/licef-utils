@@ -45,16 +45,16 @@ public class StringUtil {
      * <p>
      * For example,
      * <p>
-     * joinString( new String[] { "titi", "toto", "tata" }, '\'',',' ) returns "'titi','toto','tata'".<br>
-     * joinString( new String[] { "test" }, ':' ) returns "test".<br>
-     * joinString( new Integer[] { new Integer( 2 ), new Integer( 4 ) }, ',' ) returns "2,4".<br>
+     * join( new String[] { "titi", "toto", "tata" }, '\'',',' ) returns "'titi','toto','tata'".<br>
+     * join( new String[] { "test" }, ':' ) returns "test".<br>
+     * join( new Integer[] { new Integer( 2 ), new Integer( 4 ) }, ',' ) returns "2,4".<br>
      * <p>
      * @param strToJoin Array of objects from which the <code>toString()</code> values will be concatenated.
      * @param limiter Limiter character surrounding string values.
      * @param delimiter Delimiter character used to separate string values between each others.
      * @return A string resulting from the concatenation of the string values of the input array of objects.
      */
-    public static String joinString(final Object[] strToJoin, final char limiter, final char delimiter  ) {
+    public static String join(final Object[] strToJoin, final char limiter, final char delimiter  ) {
         StringBuffer str = new StringBuffer();
         int i = 0;
         for(; i < strToJoin.length-1; i++ )
@@ -177,7 +177,7 @@ public class StringUtil {
      * @param str String to verify.
      * @return <code>true</code> if the input string is empty (i.e., null, of length 0 or containing only white spaces.
      */
-    public static boolean isEmptyString( String str ) {
+    public static boolean isEmpty( String str ) {
         if( str == null )
             return( true );
         if( str.length() == 0 )
