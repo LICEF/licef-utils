@@ -74,6 +74,16 @@ public class IOUtil {
 
     /** 
      * Read a file and return it as an array of bytes.
+     * @param file Input file.
+     * @return A file as an array of bytes.
+     */
+    public static byte[] readFileIntoByteArray( final File file )
+    {
+        return( readFileIntoByteArray( file, false ) );
+    }
+
+    /** 
+     * Read a file and return it as an array of bytes.
      * @param url URL of the file to convert.
      * @param isCompressed <code>true</code> if we want a smaller array of bytes.
      * @return A file as an array of bytes.
@@ -101,6 +111,16 @@ public class IOUtil {
     }
 
     /** 
+     * Read a file and return it as an array of bytes.
+     * @param url URL of the file to convert.
+     * @return A file as an array of bytes.
+     */
+    public static byte[] readFileIntoByteArray( final URL url )
+    {
+        return( readFileIntoByteArray( url, false ) );
+    }
+
+    /** 
      * Write an array of bytes into a file.
      * @param buffer Array of bytes. 
      * @param file File into which the array of bytes will be written to.
@@ -123,6 +143,16 @@ public class IOUtil {
             output.close();
         }
         catch( IOException e ) { e.printStackTrace(); }
+    }
+
+    /** 
+     * Write an array of bytes into a file.
+     * @param buffer Array of bytes. 
+     * @param file File into which the array of bytes will be written to.
+     */
+    public static void writeByteArrayToFile( byte[] buffer, final File file )
+    {
+        writeByteArrayToFile( buffer, file, false );
     }
 
     /** 
@@ -197,6 +227,16 @@ public class IOUtil {
     }
 
     /** 
+     * Read a serialized object from a file.
+     * @param file Input file containing a serialized object.
+     * @return An instance of the serialized object.
+     */
+    public static Object readObject( final File file )
+    {
+        return( readObject( file, false ) );
+    }
+
+    /** 
      * Read a serialized object from an URL.
      * @param url URL pointing to a serialized object.
      * @param isCompressed <code>true</code> if the URL points to a compressed serialized object.
@@ -213,6 +253,17 @@ public class IOUtil {
         object = input.readObject();
         input.close();
         return object;
+    }
+
+    /** 
+     * Read a serialized object from an URL.
+     * @param url URL pointing to a serialized object.
+     * @return An instance of the serialized object. 
+     */
+    public static Object readObject( final URL url )
+        throws ClassNotFoundException, OptionalDataException, StreamCorruptedException, IOException
+    {
+        return( readObject( url, false ) );
     }
 
     /** 
@@ -258,6 +309,16 @@ public class IOUtil {
             output.close();
         }
         catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    /** 
+     * Write a serialized object into a file. 
+     * @param file File into which the serialized object will be written to. 
+     * @param object Object to serialize.
+     */
+    public static void writeObject( File file, Object object )
+    {
+        writeObject( file, object, false );
     }
 
     /** 
@@ -359,7 +420,7 @@ public class IOUtil {
         {
             synchronized (out)
             {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[4096];
                 while (true)
                 {
                     int bytesRead = in.read(buffer);
