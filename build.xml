@@ -1,0 +1,87 @@
+<!-- Ant script for util -->
+<!-- Author: Frederic Bergeron -->
+<project name="licef-utils" default="build" basedir=".">
+    <property environment="env"/>
+
+    <property name="version"                value="0.1.0"/>
+
+    <!-- Options for the compiler -->
+    <!--property name="build.compiler"         value="jikes"/-->
+    <property name="build.compiler.emacs"   value="true"/>
+
+    <!-- Directories -->
+    <property name="classes"                value="classes"/>
+    <property name="doc"                    value="doc"/>
+    <property name="javadoc"                value="${doc}/javadoc"/>
+    <property name="src"                    value="src"/>
+    <property name="tmp"                    value="tmp"/>
+    <property name="build"                  value="build"/>
+    <property name="forrest"                value="forrest"/>
+
+    <path id="classpath">
+        <pathelement location="${classes}"/>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${classes}"/>
+        <javac srcdir="${src}" destdir="${classes}" deprecation="true">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="build" depends="compile">
+        <mkdir dir="${build}"/>
+        <mkdir dir="${tmp}/${ant.project.name}_tmp"/>
+        <copy todir="${tmp}/${ant.project.name}_tmp">
+            <fileset dir="${classes}">
+                <include name="**/*.class"/>
+            </fileset>
+        </copy>
+        <jar jarfile="${build}/${ant.project.name}-${version}.jar" basedir="${tmp}/${ant.project.name}_tmp"/>
+        <delete dir="${tmp}/${ant.project.name}_tmp"/>
+    </target>
+
+    <target name="javadoc" depends="compile">
+        <javadoc
+            sourcepath="${src}"
+            destdir="${javadoc}"
+            packagenames="licef.*"
+            author="true"
+            version="true"
+            use="true"
+            package="true"
+            windowtitle="Util API"
+            doctitle="Util">
+            <classpath refid="classpath"/>
+        </javadoc>
+    </target>
+
+    <target name="clean">
+        <delete dir="${classes}"/>
+        <delete dir="${tmp}"/>
+        <delete dir="${build}"/>
+    </target>
+
+    <target name="cleanAll" depends="clean">
+        <delete dir="${javadoc}"/>
+        <delete dir="${forrest}/src/documentation/content/javadoc"/>
+        <exec executable="forrest.bat" dir="${forrest}">
+            <arg line="clean"/>
+        </exec>
+    </target>
+
+    <target name="rebuild" depends="clean,build"/>
+
+    <target name="forrest" depends="deployJavadoc2Forrest">
+        <exec executable="forrest.bat" dir="${forrest}" />
+    </target>
+
+    <target name="deployJavadoc2Forrest" depends="javadoc">
+        <delete dir="${forrest}/src/documentation/content/javadoc"/>
+        <mkdir dir="${forrest}/src/documentation/content/javadoc"/>
+        <copy todir="${forrest}/src/documentation/content/javadoc">
+            <fileset dir="${javadoc}"/>
+        </copy>
+    </target>
+
+</project>
