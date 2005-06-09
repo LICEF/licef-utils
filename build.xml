@@ -24,7 +24,7 @@
 
     <target name="compile">
         <mkdir dir="${classes}"/>
-        <javac srcdir="${src}" destdir="${classes}" deprecation="true">
+        <javac srcdir="${src}" destdir="${classes}" deprecation="true" source="1.3" target="1.1">
             <classpath refid="classpath"/>
         </javac>
     </target>
