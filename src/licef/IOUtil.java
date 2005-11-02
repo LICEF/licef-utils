@@ -432,4 +432,34 @@ public class IOUtil {
         }
     }
 
+    /** 
+     * Ask a question at the console. 
+     * @param question Question to ask.
+     * @param defaultAnswer Default answer if enter is pressed.
+     * @return Answer.
+     */
+    public static String ask( String question, String defaultAnswer ) throws IOException {
+        StringBuffer formattedQuestion = new StringBuffer( question );
+        if( defaultAnswer != null || !"".equals( defaultAnswer ) )
+            formattedQuestion.append( " [" ).append( defaultAnswer ).append( "]" );
+        formattedQuestion.append( ":" );
+        
+        BufferedReader reader = new BufferedReader( new InputStreamReader( System.in ) );
+        String answer = null;
+        answer = reader.readLine();
+        if( StringUtil.isEmpty( answer ) )
+            return( defaultAnswer );
+        else
+            return( answer );
+    }
+
+    /** 
+     * Ask a question at the console. 
+     * @param question Question to ask.
+     * @return Answer.
+     */
+    public static String ask( String question ) throws IOException {
+        return( ask( question, null ) );
+    }
+
 }
