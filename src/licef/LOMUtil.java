@@ -64,7 +64,8 @@ public class LOMUtil {
      */
     public static class LOMTitlesRetriever extends DefaultHandler {
 
-        public LOMTitlesRetriever( String xml ) {
+        public LOMTitlesRetriever( String xml, String encoding ) {
+            this.encoding = encoding;
             try {
                 SAXParserFactory parserFactory = SAXParserFactory.newInstance();
                 SAXParser parser = parserFactory.newSAXParser();
@@ -79,6 +80,10 @@ public class LOMUtil {
             catch( SAXException e ) {
                 e.printStackTrace();
             }
+        }
+
+        public LOMTitlesRetriever( String xml ) {
+            this( xml, "ISO-8859-1" );
         }
 
         public Enumeration getTitles( String language ) {
@@ -127,7 +132,7 @@ public class LOMUtil {
                 }
                 isTitleParsed = false;
                 try {
-                    vTitle.addElement( new String( title.toString().getBytes(), "UTF-8" ) );
+                    vTitle.addElement( new String( title.toString().getBytes(), encoding ) );
                 }
                 catch( UnsupportedEncodingException ex ) {
                     vTitle.addElement( title.toString() );
@@ -150,7 +155,9 @@ public class LOMUtil {
         private Hashtable       hTitle          = new Hashtable();
 
         private Stack           tagStack        = new Stack();
-        
+       
+        private String          encoding        = null;
+
     }
 
 }
