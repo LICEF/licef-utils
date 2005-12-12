@@ -29,34 +29,41 @@ public class LOMUtil {
         now += StringUtil.insertLeading( '0', 2, cal.get(Calendar.DATE) + "" );
 
         //general
-        String lom = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n" +
-                "<lom xmlns=\"http://ltsc.ieee.org/xsd/LOM\" " +
-                "xmlns:xsi=\"http://www.w3.org/2001/XMLSchemainstance\" " +
-                "xsi:schemaLocation=\"http://ltsc.ieee.org/xsd/LOM " +
-                "http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd\">\n" +
-                "<general><title>" +
-                "<string language=\"en\">" + englishTitle + "</string>" +
-                "<string language=\"fr\">" + frenchTitle + "</string>" +
-                "</title></general>";
+        StringBuffer lom = new StringBuffer();
+        lom.append( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n" );
+        lom.append( "<lom xmlns=\"http://ltsc.ieee.org/xsd/LOM\" " );
+        lom.append( "xmlns:xsi=\"http://www.w3.org/2001/XMLSchemainstance\" " );
+        lom.append( "xsi:schemaLocation=\"http://ltsc.ieee.org/xsd/LOM " );
+        lom.append( "http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd\">\n" );
+        lom.append( "<general><title>" );
+        
+        if( englishTitle != null )
+            lom.append( "<string language=\"en\">" ).append( englishTitle ).append( "</string>" );
+        if( frenchTitle != null )
+            lom.append( "<string language=\"fr\">" ).append( frenchTitle ).append( "</string>" );
+
+        lom.append( "</title></general>" );
 
         //metaMetadata
-        lom += "<metaMetadata><contribute><role><source>LOMv1.0</source><value>creator</value></role>" +
-                "<date><dateTime>" + now + "</dateTime></date></contribute>"+
-                "<metadataSchema>LOMv1.0</metadataSchema>"+
-                ((metadataLang != null) ?"<language>" + metadataLang + "</language>":"")+
-                "</metaMetadata>";
+        lom.append( "<metaMetadata><contribute><role><source>LOMv1.0</source><value>creator</value></role>" );
+        lom.append( "<date><dateTime>" ).append( now ).append( "</dateTime></date></contribute>" );
+        lom.append( "<metadataSchema>LOMv1.0</metadataSchema>" );
+
+        if( metadataLang != null )
+            lom.append( "<language>" ).append( metadataLang ).append( "</language>" );
+        
+        lom.append( "</metaMetadata>" );
 
         //technical
         if (location != null) {
-            lom += "<technical>";
-            if (location != null)
-                lom += "<location>" + location + "</location>";
-            lom += "</technical>";
+            lom.append( "<technical>" );
+            lom.append( "<location>" ).append( location ).append( "</location>" );
+            lom.append( "</technical>" );
         }
 
-        lom += "</lom>";
+        lom.append( "</lom>" );
 
-        return lom;
+        return( lom.toString() );
     }
 
     /** 
