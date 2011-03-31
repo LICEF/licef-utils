@@ -387,6 +387,39 @@ public class IOUtil {
         }
     }
 
+    public static String readStringFromFile( File location ) throws IOException {
+        ByteArrayOutputStream ostr = new ByteArrayOutputStream();
+        BufferedOutputStream bostr = new BufferedOutputStream( ostr );
+        FileInputStream istr = new FileInputStream( location );
+        BufferedInputStream bistr = new BufferedInputStream( istr );
+        try {
+            IOUtil.copy( bistr, bostr );
+        }
+        finally {
+            bostr.close();
+            bistr.close();
+        }
+        String str = null;
+        try {
+            str = ostr.toString( "UTF-8" );
+        }
+        catch( UnsupportedEncodingException shoulNeverHappen ) {
+            str = ostr.toString();
+        }
+        return( str );
+    }
+    
+    public static void writeStringToFile( String str, File location ) throws IOException {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter( new FileWriter( location ) );
+            writer.write( str );
+        }
+        finally {
+            writer.close();
+        }
+    }
+
     /** 
      * Create a directory recursively from a string.
      * @param dir String of a directory path. 
@@ -403,6 +436,44 @@ public class IOUtil {
             if( !f.exists() )
                 f.mkdir();
         }
+    }
+
+    /** 
+     * Create a temporary directory.
+     * @return dir A File instance pointing to the temporary directory.
+     */
+    public static File createTempDirectory() throws IOException {
+        final File temp;
+
+        temp = File.createTempFile( "temp", Long.toString( System.nanoTime() ) );
+
+        if( !( temp.delete() ) )
+            throw new IOException( "Could not delete temp file: " + temp.getAbsolutePath() );
+
+        if( !( temp.mkdir() ) )
+            throw new IOException( "Could not create temp directory: " + temp.getAbsolutePath() );
+
+        return( temp );
+    }
+
+    /** 
+     * Delete a directory (including all its subdirectories and files).
+     * @param dir The directory to be deleted
+     * @return <tt>true</tt> if the directory has been successfully deleted, <tt>false</tt> otherwise.
+     */
+    public static boolean deleteDirectory( File dir ) {
+        if( dir.isDirectory() ) {
+            String[] children = dir.list();
+            for( int i = 0; i < children.length; i++ ) {
+                if( children[ i ] == "." || children[ i ] == ".." )
+                    continue;
+                boolean ok = deleteDirectory( new File( dir, children[ i ] ) );
+                if( !ok )
+                    return( false );
+            }
+        }
+
+        return( dir.delete() );
     }
 
     /** 
@@ -431,6 +502,55 @@ public class IOUtil {
             }
         }
     }
+
+    /**
+    * This function will copy files or directories from one location to another.
+    * note that the source and the destination must be mutually exclusive. This
+    * function can not be used to copy a directory to a sub directory of itself.
+    * The function will also have problems if the destination files already exist.
+    * @param src -- A File object that represents the source for the copy
+    * @param dest -- A File object that represnts the destination for the copy.
+    * @throws IOException if unable to copy.
+    */
+    public static void copyFiles( File src, File dest ) throws IOException {
+        if( !src.exists() )
+            throw( new IOException( "copyFiles: Can not find source: " + src.getAbsolutePath() + "." ) );
+        else if( !src.canRead() )
+            throw( new IOException( "copyFiles: No right to source: " + src.getAbsolutePath() + "." ) );
+
+        if( src.isDirectory() ) {
+            if( !dest.exists() ) {
+                if( !dest.mkdirs() )
+                    throw( new IOException( "copyFiles: Could not create direcotry: " + dest.getAbsolutePath() + "." ) );
+            }
+            String list[] = src.list();
+            for( int i = 0; i < list.length; i++ ) {
+                File dest1 = new File( dest, list[ i ] );
+                File src1 = new File( src, list[ i ] );
+                copyFiles( src1 , dest1 );
+            }
+        } 
+        else {
+            FileInputStream fin = null;
+            FileOutputStream fout = null;
+            try {
+                fin =  new FileInputStream( src );
+                fout = new FileOutputStream( dest );
+                IOUtil.copy( fin, fout );
+            } 
+            catch( IOException e ) {
+                IOException wrapper = new IOException( "copyFiles: Unable to copy file: " + src.getAbsolutePath() + "to" + dest.getAbsolutePath() + "." );
+                wrapper.initCause( e );
+                wrapper.setStackTrace( e.getStackTrace() );
+                throw( wrapper );
+            } finally {
+                if( fin != null ) 
+                    fin.close();
+                if( fout != null )
+                    fout.close();
+            }
+        }
+    } 
 
     /** 
      * Ask a question at the console. 

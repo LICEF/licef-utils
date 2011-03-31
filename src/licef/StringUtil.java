@@ -1,5 +1,7 @@
 package licef;
 
+import java.io.*;
+import java.net.*;
 import java.util.*;
 
 public class StringUtil {
@@ -197,6 +199,20 @@ public class StringUtil {
      */
     public static String escapeSingleQuotes( String str ) {
         return( str.replaceAll( "'", "\\\\'" ) );
+    }
+
+    /** 
+     * Return encoded string. 
+     * @param str String to encode.
+     * @return Encoded string (if UTF-8 encoding is supported), otherwise the original unencoded string.
+     */
+    public static String getEncodedString( String str ) {
+        try {
+            return( URLEncoder.encode( str, "UTF-8" ) );
+        }
+        catch( UnsupportedEncodingException e ) {
+            return( str );
+        }
     }
 
 }
