@@ -1,4 +1,4 @@
-package ca.licef.util;
+package licef;
 
 import java.io.InputStream;
 import java.io.IOException;
