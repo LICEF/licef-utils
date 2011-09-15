@@ -324,6 +324,23 @@ public class XMLUtil {
         }
     }
 
+    /**
+     * Returns the string result of the supplied XPath
+     *
+     * @param xml  The xml document to be searched.
+     * @param xpath The XPath String to be used in the selection.
+     * @return String result, XML or literal.
+     */
+    public static String getSubXML( String xml, String xpath ) throws XPathExpressionException {
+        XPathFactory factory = XPathFactory.newInstance();
+        XPath xPath = factory.newXPath();
+        xPath.setNamespaceContext(CommonNamespaceContext.getInstance());
+        NodeList s =  (NodeList)xPath.evaluate(xpath, 
+            new InputSource(new StringReader(xml)), XPathConstants.NODESET);
+        return XMLUtil.serialize(s);   
+    }
+
+
     public static String removeHeaderDirective( String xml ) {
         int indexOfDirStart = xml.indexOf( "<?" );
         if( indexOfDirStart == -1 )
