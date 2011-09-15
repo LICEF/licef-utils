@@ -76,6 +76,7 @@ public class XMLUtil {
     public static Node getXMLNode( String xmlString ) throws ParserConfigurationException, SAXException, IOException {
         InputSource inputSource = new InputSource( new StringReader( xmlString ) );
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        docFactory.setNamespaceAware( true );
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.parse( inputSource ); 
         return( doc );
