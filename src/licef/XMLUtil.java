@@ -307,6 +307,7 @@ public class XMLUtil {
         }
         try {
             XPath xpathEvaluater = xPathFactory.newXPath();
+            xpathEvaluater.setNamespaceContext( CommonNamespaceContext.getInstance() );
 
             if (xpath.endsWith(ELEMENT_NAME_FUNC)) {
                 return (NodeList) xpathEvaluater.evaluate(xpath.substring(0,
