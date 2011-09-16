@@ -331,15 +331,20 @@ public class XMLUtil {
      * @param xpath The XPath String to be used in the selection.
      * @return String result, XML or literal.
      */
-    public static String getSubXML( String xml, String xpath ) throws XPathExpressionException {
+    public static String getSubXML( String xml, String xpath ) throws Exception {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xPath = factory.newXPath();
         xPath.setNamespaceContext(CommonNamespaceContext.getInstance());
-        NodeList s =  (NodeList)xPath.evaluate(xpath, 
-            new InputSource(new StringReader(xml)), XPathConstants.NODESET);
-        return XMLUtil.serialize(s);   
-    }
 
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        dbf.setCoalescing(true); //convert CDATA node to Text node
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document document = builder.parse(new InputSource(new StringReader(xml)));
+        NodeList list = document.getDocumentElement().getChildNodes();
+        NodeList s =  (NodeList)xPath.evaluate(xpath, list, XPathConstants.NODESET);
+        return XMLUtil.serialize(s);
+    }
 
     public static String removeHeaderDirective( String xml ) {
         int indexOfDirStart = xml.indexOf( "<?" );
