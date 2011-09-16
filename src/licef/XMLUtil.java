@@ -331,7 +331,7 @@ public class XMLUtil {
      * @param xpath The XPath String to be used in the selection.
      * @return String result, XML or literal.
      */
-    public static String getSubXML( String xml, String xpath ) throws Exception {
+    public static String[] getSubXML( String xml, String xpath ) throws Exception {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xPath = factory.newXPath();
         xPath.setNamespaceContext(CommonNamespaceContext.getInstance());
@@ -343,7 +343,11 @@ public class XMLUtil {
         Document document = builder.parse(new InputSource(new StringReader(xml)));
         NodeList list = document.getDocumentElement().getChildNodes();
         NodeList s =  (NodeList)xPath.evaluate(xpath, list, XPathConstants.NODESET);
-        return XMLUtil.serialize(s);
+        String[] res = new String[s.getLength()];
+        for (int i = 0; i < s.getLength(); i++) {
+            res[i] = XMLUtil.serialize(s.item(i), false);
+        }
+        return res;
     }
 
     public static String removeHeaderDirective( String xml ) {
