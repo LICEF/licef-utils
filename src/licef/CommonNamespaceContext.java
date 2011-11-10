@@ -16,6 +16,8 @@ public class CommonNamespaceContext implements NamespaceContext {
     public static final String oaiNSURI = "http://www.openarchives.org/OAI/2.0/";
     public static final String xsdNSURI = "http://www.w3.org/2001/XMLSchema";
     public static final String xsiNSURI = "http://www.w3.org/2001/XMLSchema-instance";
+    public static final String rdfNSURI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    public static final String vcardNSURI = "http://www.w3.org/2006/vcard/ns#";
     public static final String fedora_managementNSURI = "http://www.fedora.info/definitions/1/0/management/";
 
     public static CommonNamespaceContext getInstance() {
@@ -52,6 +54,8 @@ public class CommonNamespaceContext implements NamespaceContext {
         setPrefixNamespace( "oai", oaiNSURI );
         setPrefixNamespace( "xsd", xsdNSURI );
         setPrefixNamespace( "xsi", xsiNSURI );
+        setPrefixNamespace( "rdf", rdfNSURI );
+        setPrefixNamespace( "vcard", vcardNSURI );
         setPrefixNamespace( "fedora_management", fedora_managementNSURI );
     }
 
