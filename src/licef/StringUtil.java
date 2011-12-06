@@ -215,4 +215,22 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Return number of occurrence pattern in a string. 
+     * @param pattern Search pattern
+     * @param str String to search for.
+     * @return result
+     */
+    public static int occurrenceOf(String pattern, String str) {
+        int len = pattern.length();
+        int result = 0;
+        if (len > 0) {
+            int index = str.indexOf(pattern);
+            while (index != -1) {
+                result++;
+                index = str.indexOf(pattern, index + len);
+            }
+        }
+        return result;
+    }
 }
