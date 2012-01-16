@@ -59,7 +59,6 @@ public class XMLUtil {
         StreamResult result = new StreamResult( writer );
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer serializer = tf.newTransformer();
-        serializer.setOutputProperty( OutputKeys.ENCODING, "ISO-8859-1" );
         serializer.setOutputProperty( OutputKeys.INDENT, "yes" );
         serializer.transform( domSource, result ); 
         return( writer.toString() );
