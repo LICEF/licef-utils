@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.zip.*;
+import javax.activation.MimetypesFileTypeMap;
 
 public class IOUtil {
 
@@ -581,5 +582,38 @@ public class IOUtil {
     public static String ask( String question ) throws IOException {
         return( ask( question, null ) );
     }
+
+    public static String getMimeType( String fileOrUrl ) throws IOException {
+        if( mimeTypes == null )
+            initMimeTypes();
+        return( mimeTypes.getContentType( fileOrUrl ) );
+    }
+
+    private static void initMimeTypes() throws IOException {
+        mimeTypes = new MimetypesFileTypeMap();
+        String[] mimeTypeDefinitions = getMimeTypeDefinitions();
+        for( int i = 0; i < mimeTypeDefinitions.length; i++ )
+            mimeTypes.addMimeTypes( mimeTypeDefinitions[ i ] );
+    }
+
+    private static String[] getMimeTypeDefinitions() throws IOException {
+        String line = null;
+        ArrayList<String> defs = new ArrayList<String>();
+        InputStream is = null;
+        try {
+            is = IOUtil.class.getResourceAsStream( "mime.types" );
+            BufferedReader in = new BufferedReader( new InputStreamReader( is ) );
+            while( ( line = in.readLine() ) != null ) {
+                defs.add( line );
+            }
+        }
+        finally {
+            is.close();
+        }
+        String[] aDefs = new String[ defs.size() ];
+        return( defs.toArray( aDefs ) );
+    }
+
+    private static MimetypesFileTypeMap mimeTypes = null;
 
 }
