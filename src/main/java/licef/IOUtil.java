@@ -589,13 +589,22 @@ public class IOUtil {
 
         //web site case
         if (fileOrUrl.startsWith("http")) {
+            String webMimetype = "text/html";
             String filename = (new File(fileOrUrl)).getName();
+            int queryIndex = filename.indexOf("?");
+            if (queryIndex != -1)
+                filename = filename.substring(0, queryIndex);
+            if (filename.equals((new URL(fileOrUrl)).getHost()))
+                return webMimetype;
+
             int dotIndex = filename.lastIndexOf(".");
             if (dotIndex == -1)
-                return "text/html";
+                return webMimetype;
+            else
+                return( mimeTypes.getContentType( filename ) );
         }
-
-        return( mimeTypes.getContentType( fileOrUrl ) );
+        else
+            return( mimeTypes.getContentType( fileOrUrl ) );
     }
 
     private static void initMimeTypes() throws IOException {
