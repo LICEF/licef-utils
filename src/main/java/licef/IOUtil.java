@@ -586,6 +586,15 @@ public class IOUtil {
     public static String getMimeType( String fileOrUrl ) throws IOException {
         if( mimeTypes == null )
             initMimeTypes();
+
+        //web site case
+        if (fileOrUrl.startsWith("http")) {
+            String filename = (new File(fileOrUrl)).getName();
+            int dotIndex = filename.lastIndexOf(".");
+            if (dotIndex == -1)
+                return "text/html";
+        }
+
         return( mimeTypes.getContentType( fileOrUrl ) );
     }
 
