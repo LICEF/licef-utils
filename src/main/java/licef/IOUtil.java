@@ -1,9 +1,9 @@
 package licef;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 import java.util.zip.*;
+import java.net.*;
 import javax.activation.MimetypesFileTypeMap;
 
 public class IOUtil {
@@ -584,27 +584,18 @@ public class IOUtil {
     }
 
     public static String getMimeType( String fileOrUrl ) throws IOException {
-        if( mimeTypes == null )
-            initMimeTypes();
-
-        //web site case
         if (fileOrUrl.startsWith("http")) {
-            String webMimetype = "text/html";
-            String filename = (new File(fileOrUrl)).getName();
-            int queryIndex = filename.indexOf("?");
-            if (queryIndex != -1)
-                filename = filename.substring(0, queryIndex);
-            if (filename.equals((new URL(fileOrUrl)).getHost()))
-                return webMimetype;
-
-            int dotIndex = filename.lastIndexOf(".");
-            if (dotIndex == -1)
-                return webMimetype;
-            else
-                return( mimeTypes.getContentType( filename ) );
+            URLConnection conn = new URL(fileOrUrl).openConnection();
+            if (conn instanceof HttpURLConnection &&
+                ((HttpURLConnection)conn).getResponseCode() == HttpURLConnection.HTTP_OK) //null returned for 404 -AM
+                    return StringUtil.split(conn.getContentType(), ';')[0];
         }
-        else
+        else {
+            if( mimeTypes == null )
+                initMimeTypes();
             return( mimeTypes.getContentType( fileOrUrl ) );
+        }
+        return null;
     }
 
     private static void initMimeTypes() throws IOException {
