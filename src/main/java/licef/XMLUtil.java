@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.Hashtable;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -33,11 +34,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -337,16 +334,61 @@ public class XMLUtil {
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
-        dbf.setCoalescing(true); //convert CDATA node to Text node
         DocumentBuilder builder = dbf.newDocumentBuilder();
         Document document = builder.parse(new InputSource(new StringReader(xml)));
         NodeList list = document.getDocumentElement().getChildNodes();
         NodeList s =  (NodeList)xPath.evaluate(xpath, list, XPathConstants.NODESET);
         String[] res = new String[s.getLength()];
         for (int i = 0; i < s.getLength(); i++) {
-            res[i] = XMLUtil.serialize(s.item(i), false);
+            Node n = s.item(i);
+            Node sibling = n.getNextSibling();
+            if (sibling != null && sibling.getNodeType() == Node.CDATA_SECTION_NODE)
+                n = sibling;
+            res[i] = XMLUtil.serialize(n, false);
         }
         return res;
+    }
+
+    /**
+     * Returns the xml result of some elements substitution
+     *
+     * @param xml  The xml document to be searched.
+     * @param xpath The XPath String to be used in the selection.
+     * @param values The substitution table.
+     * @return String result, substitued XML.
+     */
+    public static String substituteXMLContent( String xml, String xpath, Hashtable values) throws Exception {
+        XPathFactory factory = XPathFactory.newInstance();
+        XPath xPath = factory.newXPath();
+        xPath.setNamespaceContext(CommonNamespaceContext.getInstance());
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document document = builder.parse(new InputSource(new StringReader(xml)));
+        NodeList list = document.getDocumentElement().getChildNodes();
+        NodeList s =  (NodeList)xPath.evaluate(xpath, list, XPathConstants.NODESET);
+        for (int i = 0; i < s.getLength(); i++) {
+            Node n = s.item(i);
+            Node sibling = n.getNextSibling();
+            boolean isCDATANode = false;
+            if (sibling != null && sibling.getNodeType() == Node.CDATA_SECTION_NODE) {
+                n = sibling;
+                isCDATANode = true;
+            }
+            String key = n.getTextContent();
+            String newValue = (String)values.get(key);
+            if (newValue != null) {
+                if (isCDATANode) {
+                    Node newNode = document.createTextNode(newValue);
+                    n.getParentNode().replaceChild(newNode, n);
+                }
+                else
+                    n.setNodeValue(newValue);
+            }
+        }
+
+        return getXMLString(document);
     }
 
     public static String removeHeaderDirective( String xml ) {
@@ -362,3 +404,4 @@ public class XMLUtil {
     }
 
 }
+
