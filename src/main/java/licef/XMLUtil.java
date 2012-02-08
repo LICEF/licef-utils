@@ -372,7 +372,9 @@ public class XMLUtil {
             Node n = s.item(i);
             Node sibling = n.getNextSibling();
             boolean isCDATANode = false;
-            if (sibling != null && sibling.getNodeType() == Node.CDATA_SECTION_NODE) {
+            if (n.getNodeType() == Node.CDATA_SECTION_NODE)
+                isCDATANode = true;
+            else if (sibling != null && sibling.getNodeType() == Node.CDATA_SECTION_NODE) {
                 n = sibling;
                 isCDATANode = true;
             }

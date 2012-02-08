@@ -5,7 +5,7 @@
     <groupId>licef</groupId>
     <artifactId>licef-utils</artifactId>
     <packaging>jar</packaging>
-    <version>0.6.2</version>
+    <version>0.6.3</version>
     <name>Licef Util Library</name>
 
     <build>
