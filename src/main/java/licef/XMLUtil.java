@@ -328,6 +328,8 @@ public class XMLUtil {
      * @return String result, XML or literal.
      */
     public static String[] getSubXML( String xml, String xpath ) throws Exception {
+        if (xpath == null || "".equals(xpath))
+            return new String[]{};
         XPathFactory factory = XPathFactory.newInstance();
         XPath xPath = factory.newXPath();
         xPath.setNamespaceContext(CommonNamespaceContext.getInstance());
