@@ -359,7 +359,7 @@ public class XMLUtil {
      * @param values The substitution table.
      * @return String result, substitued XML.
      */
-    public static String substituteXMLContent( String xml, String xpath, Hashtable values) throws Exception {
+    public static String substituteXMLContent( String xml, String xpath, Hashtable values, boolean keepCDATA) throws Exception {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xPath = factory.newXPath();
         xPath.setNamespaceContext(CommonNamespaceContext.getInstance());
@@ -383,7 +383,7 @@ public class XMLUtil {
             String key = n.getTextContent();
             String newValue = (String)values.get(key);
             if (newValue != null) {
-                if (isCDATANode) {
+                if (isCDATANode && !keepCDATA) {
                     Node newNode = document.createTextNode(newValue);
                     n.getParentNode().replaceChild(newNode, n);
                 }
