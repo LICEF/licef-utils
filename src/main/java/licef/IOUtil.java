@@ -347,18 +347,13 @@ public class IOUtil {
      */
     public static Vector readLines( final URL url )
     {
-        Vector v = new Vector();
-        String nextLine = null;
         try
         {
-            InputStream is = url.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            while((nextLine = br.readLine()) != null)
-                v.addElement(nextLine);
-            is.close();
-            return v;
+            return readLines(url.openStream());
+        } catch (IOException e) {
+             System.out.println(e+"");
+            return null;
         }
-        catch(IOException e){System.out.println(e+"");return null;}
     }
 
     /** 
@@ -368,13 +363,27 @@ public class IOUtil {
      */
     public static Vector readLines( File file )
     {
+        try {
+            return readLines(new FileInputStream( file ));
+        } catch (FileNotFoundException e) {
+            System.out.println("" + e);
+            return null;
+        }
+    }
+
+    /**
+     * Returns a <code>Vector</code> of lines of an inputStream.
+     * @param in Stream to read.
+     * @return <code>Vector</code> of lines of the specified stream.
+     */
+
+    public static Vector readLines( InputStream in )
+    {
         Vector v = new Vector();
-        String nextLine = null;
-        FileInputStream fis = null;
+        String nextLine;
         try
         {
-            fis = new FileInputStream( file );
-            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
             while((nextLine = br.readLine()) != null)
                 v.addElement(nextLine);
             return v;
@@ -382,12 +391,11 @@ public class IOUtil {
         catch(IOException e){ System.out.println( e.toString() ); return null;}
         finally {
             try {
-                if( fis != null )
-                    fis.close();
+                if( in != null )
+                    in.close();
             } catch( IOException e2 ) { System.out.println( e2.toString() ); return null; }
         }
     }
-
     public static String readStringFromFile( File location ) throws IOException {
         ByteArrayOutputStream ostr = new ByteArrayOutputStream();
         BufferedOutputStream bostr = new BufferedOutputStream( ostr );
