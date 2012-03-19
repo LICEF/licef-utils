@@ -8,6 +8,19 @@ import javax.activation.MimetypesFileTypeMap;
 
 public class IOUtil {
 
+    /**
+     * Returns true if path is an URL. 
+     * @param s path to analyze.
+     */
+    public static boolean isURL(String s) {
+        try {
+            new URL(s);
+            return !s.startsWith("file:/");
+        } catch (MalformedURLException e) {
+            return false;
+        }
+    }
+
     /** 
      * Get a file specified by an input URL and save it to a specified file. 
      * @param url URL of the file to fetch.
