@@ -18,6 +18,8 @@ public class CommonNamespaceContext implements NamespaceContext {
     public static final String xsiNSURI = "http://www.w3.org/2001/XMLSchema-instance";
     public static final String rdfNSURI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     public static final String vcardNSURI = "http://www.w3.org/2006/vcard/ns#";
+    public static final String skosNSURI = "http://www.w3.org/2004/02/skos/core#";
+    public static final String vdexNSURI = "http://www.imsglobal.org/xsd/imsvdex_v1p0";
     public static final String fedora_managementNSURI = "http://www.fedora.info/definitions/1/0/management/";
 
     public static CommonNamespaceContext getInstance() {
@@ -56,6 +58,8 @@ public class CommonNamespaceContext implements NamespaceContext {
         setPrefixNamespace( "xsi", xsiNSURI );
         setPrefixNamespace( "rdf", rdfNSURI );
         setPrefixNamespace( "vcard", vcardNSURI );
+        setPrefixNamespace( "skos", skosNSURI );
+        setPrefixNamespace( "vdex", vdexNSURI );
         setPrefixNamespace( "fedora_management", fedora_managementNSURI );
     }
 

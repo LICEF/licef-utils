@@ -422,16 +422,21 @@ public class XMLUtil {
     }
 
     /**
-     * Returns document namespaces
+     * Returns element attributes of the 1st result of the supplied xpath
      *
      * @param xml  The xml document to be searched.
+     * @param xpath  The element to find.
      * @return Hashtable results.
      */
-    public static Hashtable getNamespaces(String xml) throws Exception {
+    public static Hashtable getAttributes(String xml, String xpath) throws Exception {
+        String[] array = getSubXML(xml, xpath);
+        if (array.length == 0)
+            return null;
+
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder builder = dbf.newDocumentBuilder();
-        Document document = builder.parse(new InputSource(new StringReader(xml)));
+        Document document = builder.parse(new InputSource(new StringReader(array[0])));
         NamedNodeMap nnm = document.getDocumentElement().getAttributes();
         Hashtable<String, String> res = new Hashtable<String, String>();
         for (int i = 0; i < nnm.getLength(); i++) {
