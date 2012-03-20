@@ -407,5 +407,38 @@ public class XMLUtil {
         return( xml.substring( xml.indexOf( "<", indexOfDirEnd + 2 ) ) );
     }
 
+    /**
+     * Returns root tagname
+     *
+     * @param xml  The xml document to be searched.
+     * @return String result.
+     */
+    public static String getRootTagName(String xml) throws Exception {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document document = builder.parse(new InputSource(new StringReader(xml)));
+        return document.getDocumentElement().getTagName();
+    }
+
+    /**
+     * Returns document namespaces
+     *
+     * @param xml  The xml document to be searched.
+     * @return Hashtable results.
+     */
+    public static Hashtable getNamespaces(String xml) throws Exception {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document document = builder.parse(new InputSource(new StringReader(xml)));
+        NamedNodeMap nnm = document.getDocumentElement().getAttributes();
+        Hashtable<String, String> res = new Hashtable<String, String>();
+        for (int i = 0; i < nnm.getLength(); i++) {
+            Node node = nnm.item(i);
+            res.put(node.getLocalName(), node.getTextContent());
+        }
+        return res;
+    }
 }
 
