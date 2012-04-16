@@ -21,6 +21,7 @@ public class CommonNamespaceContext implements NamespaceContext {
     public static final String skosNSURI = "http://www.w3.org/2004/02/skos/core#";
     public static final String vdexNSURI = "http://www.imsglobal.org/xsd/imsvdex_v1p0";
     public static final String fedora_managementNSURI = "http://www.fedora.info/definitions/1/0/management/";
+    public static final String comete_InternalFormatNSURI = "http://comete.licef.ca/internal-format";
 
     public static CommonNamespaceContext getInstance() {
         if( instance == null )
@@ -61,6 +62,7 @@ public class CommonNamespaceContext implements NamespaceContext {
         setPrefixNamespace( "skos", skosNSURI );
         setPrefixNamespace( "vdex", vdexNSURI );
         setPrefixNamespace( "fedora_management", fedora_managementNSURI );
+        setPrefixNamespace( "comete", comete_InternalFormatNSURI );
     }
 
     private static CommonNamespaceContext instance;
