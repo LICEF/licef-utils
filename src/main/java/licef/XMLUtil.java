@@ -12,7 +12,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -24,6 +27,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -445,5 +449,27 @@ public class XMLUtil {
         }
         return res;
     }
-}
 
+    public static String applyXslToDocument( StreamSource xslt, StreamSource doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws IOException, TransformerConfigurationException, TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        if( resolver != null )
+            transformerFactory.setURIResolver( resolver );
+        
+        Transformer transformer = transformerFactory.newTransformer( xslt );
+        if( transformerFactory != null )
+            transformer.setOutputProperties( transformerProperties );
+
+        if( params != null ) {
+            for( Map.Entry<String,String> cursor : params.entrySet() ) {
+                transformer.setParameter( cursor.getKey(), cursor.getValue() );
+            }
+        }
+
+        StringWriter strWriter = new StringWriter();
+        StreamResult result = new StreamResult( strWriter );
+        transformer.transform( doc, result );
+
+        return( strWriter.toString() );
+    }
+
+}
