@@ -12,6 +12,7 @@ public class CommonNamespaceContext implements NamespaceContext {
 
     public static final String lomNSURI = "http://ltsc.ieee.org/xsd/LOM";
     public static final String dcNSURI = "http://purl.org/dc/elements/1.1/";
+    public static final String dctNSURI = "http://purl.org/dc/terms/";
     public static final String oaidcNSURI = "http://www.openarchives.org/OAI/2.0/oai_dc/";
     public static final String oaiNSURI = "http://www.openarchives.org/OAI/2.0/";
     public static final String xsdNSURI = "http://www.w3.org/2001/XMLSchema";
@@ -21,6 +22,7 @@ public class CommonNamespaceContext implements NamespaceContext {
     public static final String skosNSURI = "http://www.w3.org/2004/02/skos/core#";
     public static final String vdexNSURI = "http://www.imsglobal.org/xsd/imsvdex_v1p0";
     public static final String fedora_managementNSURI = "http://www.fedora.info/definitions/1/0/management/";
+    public static final String cometeNSURI = "http://comete.licef.ca/reference#";
     public static final String comete_InternalFormatNSURI = "http://comete.licef.ca/internal-format";
 
     public static CommonNamespaceContext getInstance() {
@@ -53,6 +55,7 @@ public class CommonNamespaceContext implements NamespaceContext {
     private CommonNamespaceContext() {
         setPrefixNamespace( "lom", lomNSURI );
         setPrefixNamespace( "dc", dcNSURI );
+        setPrefixNamespace( "dct", dctNSURI );
         setPrefixNamespace( "oaidc", oaidcNSURI );
         setPrefixNamespace( "oai", oaiNSURI );
         setPrefixNamespace( "xsd", xsdNSURI );
@@ -62,7 +65,8 @@ public class CommonNamespaceContext implements NamespaceContext {
         setPrefixNamespace( "skos", skosNSURI );
         setPrefixNamespace( "vdex", vdexNSURI );
         setPrefixNamespace( "fedora_management", fedora_managementNSURI );
-        setPrefixNamespace( "comete", comete_InternalFormatNSURI );
+        setPrefixNamespace( "comete", cometeNSURI );
+        setPrefixNamespace( "comete_if", comete_InternalFormatNSURI );
     }
 
     private static CommonNamespaceContext instance;
