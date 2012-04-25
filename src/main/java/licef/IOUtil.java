@@ -409,11 +409,19 @@ public class IOUtil {
             } catch( IOException e2 ) { System.out.println( e2.toString() ); return null; }
         }
     }
+
     public static String readStringFromFile( File location ) throws IOException {
+        return readString( new FileInputStream( location ) );
+    }
+
+    public static String readStringFromURL( URL url ) throws IOException {
+        return readString( url.openStream() );
+    }
+
+    public static String readString( InputStream in ) throws IOException {
         ByteArrayOutputStream ostr = new ByteArrayOutputStream();
         BufferedOutputStream bostr = new BufferedOutputStream( ostr );
-        FileInputStream istr = new FileInputStream( location );
-        BufferedInputStream bistr = new BufferedInputStream( istr );
+        BufferedInputStream bistr = new BufferedInputStream( in );
         try {
             IOUtil.copy( bistr, bostr );
         }
@@ -430,6 +438,7 @@ public class IOUtil {
         }
         return( str );
     }
+    
     
     public static void writeStringToFile( String str, File location ) throws IOException {
         BufferedWriter writer = null;
