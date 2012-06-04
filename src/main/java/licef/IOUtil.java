@@ -623,12 +623,11 @@ public class IOUtil {
                     return StringUtil.split(conn.getContentType(), ';')[0];
             }
         }
-        else {
-            if( mimeTypes == null )
-                initMimeTypes();
-            return( mimeTypes.getContentType( fileOrUrl ) );
-        }
-        return null;
+
+        if( mimeTypes == null )
+            initMimeTypes();
+        
+        return( mimeTypes.getContentType( fileOrUrl ) );
     }
 
     private static void initMimeTypes() throws IOException {
