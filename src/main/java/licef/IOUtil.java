@@ -615,12 +615,18 @@ public class IOUtil {
 
     public static String getMimeType( String fileOrUrl ) throws IOException {
         if (fileOrUrl.startsWith("http")) {
-            URLConnection conn = new URL(fileOrUrl).openConnection();
-            if (conn instanceof HttpURLConnection) {
-                HttpURLConnection httpConn = (HttpURLConnection)conn;
-                httpConn.setRequestMethod("HEAD");
-                if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) //null returned for 404 -AM
-                    return StringUtil.split(conn.getContentType(), ';')[0];
+            try { 
+                URLConnection conn = new URL(fileOrUrl).openConnection();
+                if (conn instanceof HttpURLConnection) {
+                    HttpURLConnection httpConn = (HttpURLConnection)conn;
+                    httpConn.setRequestMethod("HEAD");
+                    if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) //null returned for 404 -AM
+                        return StringUtil.split(conn.getContentType(), ';')[0];
+                }
+            }
+            catch( IOException e ) {
+                // If the resource is inaccessible, we will guess the mime type 
+                // checking the file extension.
             }
         }
 
