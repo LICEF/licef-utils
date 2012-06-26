@@ -5,7 +5,7 @@
     <groupId>licef</groupId>
     <artifactId>licef-utils</artifactId>
     <packaging>jar</packaging>
-    <version>0.7.6</version>
+    <version>0.7.7</version>
     <name>Licef Util Library</name>
 
     <build>
@@ -17,6 +17,14 @@
             </plugin>
         </plugins>
     </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2</version>
+        </dependency>
+    </dependencies>
 
     <distributionManagement>
         <snapshotRepository>

@@ -6,6 +6,13 @@ import java.util.zip.*;
 import java.net.*;
 import javax.activation.MimetypesFileTypeMap;
 
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.params.CoreConnectionPNames;
+
 public class IOUtil {
 
     /**
@@ -613,27 +620,52 @@ public class IOUtil {
         return( ask( question, null ) );
     }
 
-    public static String getMimeType( String fileOrUrl ) throws IOException {
+    public static String getMimeType( String fileOrUrl, boolean useInternet, int timeout ) throws IOException {
+        URL url = null;
         if (fileOrUrl.startsWith("http")) {
-            try { 
-                URLConnection conn = new URL(fileOrUrl).openConnection();
-                if (conn instanceof HttpURLConnection) {
-                    HttpURLConnection httpConn = (HttpURLConnection)conn;
-                    httpConn.setRequestMethod("HEAD");
-                    if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) //null returned for 404 -AM
-                        return StringUtil.split(conn.getContentType(), ';')[0];
+            url = new URL( fileOrUrl );
+            if( useInternet ) {
+                HttpClient client = new DefaultHttpClient();
+                if( timeout > 0 ) {
+                    client.getParams().setParameter( CoreConnectionPNames.CONNECTION_TIMEOUT, new Integer( timeout ) );
+                    client.getParams().setParameter( CoreConnectionPNames.SO_TIMEOUT, new Integer( timeout ) );
+                }
+                HttpHead method = new HttpHead( fileOrUrl );
+                try {
+                    HttpResponse resp = client.execute( method );
+                    if( resp.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK ) {
+                        Header header = resp.getFirstHeader( "Content-Type" );
+                        if( header != null  )
+                            return( StringUtil.split( header.getValue(), ';' )[0] );
+                    }
+                }
+                catch( Exception ignore ) {
+                    // If a problem occurs, we try to find the mime-type using the file extension.
                 }
             }
-            catch( IOException e ) {
-                // If the resource is inaccessible, we will guess the mime type 
-                // checking the file extension.
+        }
+
+        if( url != null ) {
+            String filename = url.getPath();
+            int indexOfLastSlash = filename.lastIndexOf( "/" );
+            if( indexOfLastSlash != -1 ) 
+                filename = filename.substring( indexOfLastSlash + 1 );
+            if( "".equals( filename ) ) {
+                if( fileOrUrl.startsWith( "http" ) )
+                    return( "text/html" );
             }
+            else 
+                fileOrUrl = filename;
         }
 
         if( mimeTypes == null )
             initMimeTypes();
         
         return( mimeTypes.getContentType( fileOrUrl ) );
+    }
+
+    public static String getMimeType( String fileOrUrl ) throws IOException {
+        return( getMimeType( fileOrUrl, true, 3000 ) );
     }
 
     private static void initMimeTypes() throws IOException {
