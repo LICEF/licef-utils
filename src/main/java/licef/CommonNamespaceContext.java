@@ -18,6 +18,7 @@ public class CommonNamespaceContext implements NamespaceContext {
     public static final String xsdNSURI = "http://www.w3.org/2001/XMLSchema";
     public static final String xsiNSURI = "http://www.w3.org/2001/XMLSchema-instance";
     public static final String rdfNSURI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    public static final String rdfsNSURI = "http://www.w3.org/2000/01/rdf-schema#";
     public static final String vcardNSURI = "http://www.w3.org/2006/vcard/ns#";
     public static final String skosNSURI = "http://www.w3.org/2004/02/skos/core#";
     public static final String foafNSURI = "http://xmlns.com/foaf/0.1/";
@@ -66,6 +67,7 @@ public class CommonNamespaceContext implements NamespaceContext {
         setPrefixNamespace( "xsd", xsdNSURI );
         setPrefixNamespace( "xsi", xsiNSURI );
         setPrefixNamespace( "rdf", rdfNSURI );
+        setPrefixNamespace( "rdfs", rdfsNSURI );
         setPrefixNamespace( "vcard", vcardNSURI );
         setPrefixNamespace( "skos", skosNSURI );
         setPrefixNamespace( "foaf", foafNSURI );
