@@ -630,8 +630,8 @@ public class IOUtil {
                     client.getParams().setParameter( CoreConnectionPNames.CONNECTION_TIMEOUT, new Integer( timeout ) );
                     client.getParams().setParameter( CoreConnectionPNames.SO_TIMEOUT, new Integer( timeout ) );
                 }
-                HttpHead method = new HttpHead( fileOrUrl );
                 try {
+                    HttpHead method = new HttpHead( fileOrUrl );
                     HttpResponse resp = client.execute( method );
                     if( resp.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK ) {
                         Header header = resp.getFirstHeader( "Content-Type" );
