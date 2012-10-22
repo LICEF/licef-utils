@@ -1,6 +1,8 @@
 package licef;
 
 import java.util.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class DateUtil {
 
@@ -54,6 +56,22 @@ public class DateUtil {
         sec += m * 60;
         sec += s;
         return sec;
+    }
+
+    /**
+     * Convert a Date to ISO format string
+     * @param date
+     * @param format
+     * @param tz
+     * @return result as string 
+     */
+    public static String toISOString(Date date, String format, TimeZone tz)
+    {
+        if( format == null ) format = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+        if( tz == null ) tz = TimeZone.getDefault();
+        DateFormat f = new SimpleDateFormat(format);
+        f.setTimeZone(tz);
+        return f.format(date);
     }
 
 }
