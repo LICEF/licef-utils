@@ -620,6 +620,13 @@ public class IOUtil {
         return( ask( question, null ) );
     }
 
+    public static String enforceAbsoluteUrl( String url ) {
+        if( url.startsWith( "http" ) )
+            return( url );
+        else 
+            return( "http://" + url );
+    }
+
     public static String getMimeType( String fileOrUrl, boolean useInternet, int timeout ) throws IOException {
         URL url = null;
         if (fileOrUrl.startsWith("http")) {
