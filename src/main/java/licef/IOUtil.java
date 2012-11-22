@@ -621,6 +621,9 @@ public class IOUtil {
     }
 
     public static String enforceAbsoluteUrl( String url ) {
+        if (url == null || "".equals(url))
+            return null;
+        
         if( url.startsWith( "http" ) )
             return( url );
         else 
