@@ -29,8 +29,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.xpath.XPath;
@@ -450,7 +451,7 @@ public class XMLUtil {
         return res;
     }
 
-    public static String applyXslToDocument( StreamSource xslt, StreamSource doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws IOException, TransformerConfigurationException, TransformerException {
+    public static String applyXslToDocument( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws IOException, TransformerConfigurationException, TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         if( resolver != null )
             transformerFactory.setURIResolver( resolver );
@@ -470,6 +471,27 @@ public class XMLUtil {
         transformer.transform( doc, result );
 
         return( strWriter.toString() );
+    }
+
+    public static Node applyXslToDocument2( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws IOException, TransformerConfigurationException, TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        if( resolver != null )
+            transformerFactory.setURIResolver( resolver );
+        
+        Transformer transformer = transformerFactory.newTransformer( xslt );
+        if( transformerFactory != null )
+            transformer.setOutputProperties( transformerProperties );
+
+        if( params != null ) {
+            for( Map.Entry<String,String> cursor : params.entrySet() ) {
+                transformer.setParameter( cursor.getKey(), cursor.getValue() );
+            }
+        }
+
+        DOMResult result = new DOMResult();
+        transformer.transform( doc, result );
+
+        return( result.getNode() );
     }
 
 }
