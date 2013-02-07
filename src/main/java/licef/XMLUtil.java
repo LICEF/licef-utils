@@ -1,9 +1,11 @@
 package licef;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -76,6 +78,31 @@ public class XMLUtil {
      */
     public static Node getXMLNode( String xmlString ) throws ParserConfigurationException, SAXException, IOException {
         InputSource inputSource = new InputSource( new StringReader( xmlString ) );
+        return( getXMLNode( inputSource ) );
+    }
+
+    /** 
+     * Return a Node corresponding to the input XML string representation.
+     * @param xmlFile XML file.
+     * @return An instance of Node corresponding to the input XML string representation.
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
+     * @throws IOException 
+     */
+    public static Node getXMLNode( File xmlFile ) throws ParserConfigurationException, SAXException, IOException {
+        InputSource inputSource = new InputSource( new BufferedInputStream( new FileInputStream( xmlFile ) ) );
+        return( getXMLNode( inputSource ) );
+    }
+
+    /** 
+     * Return a Node corresponding to the input XML string representation.
+     * @param inputSource source.
+     * @return An instance of Node corresponding to the input XML string representation.
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
+     * @throws IOException 
+     */
+    public static Node getXMLNode( InputSource inputSource ) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setNamespaceAware( true );
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
