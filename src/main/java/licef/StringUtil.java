@@ -2,6 +2,7 @@ package licef;
 
 import java.io.*;
 import java.net.*;
+import java.text.Normalizer;
 import java.util.*;
 
 public class StringUtil {
@@ -250,5 +251,11 @@ public class StringUtil {
 
         return str;
     }
-    
+
+    public static String removeAccents(String str) {
+        if( str == null || str.length() == 0 )
+            return str;
+
+        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
 }
