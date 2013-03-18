@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 
 public class DateUtil {
 
+    static int MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
+
     /** 
      * Return if two instances of Date are equals (at the minute precision).
      * @param date1 First date to compare.
@@ -72,6 +74,18 @@ public class DateUtil {
         DateFormat f = new SimpleDateFormat(format);
         f.setTimeZone(tz);
         return f.format(date);
+    }
+
+    /**
+     * Return next day as ISO date without time.
+     * @param strDate in ISO format. Should be passed without time.
+     * @return
+     */
+    public static String nextDay(String strDate) {
+        String[] spl = strDate.split("-");
+        Date date =  new Date(Integer.parseInt(spl[0]) - 1900, Integer.parseInt(spl[1]) - 1, Integer.parseInt(spl[2]));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date.getTime() + MILLIS_IN_DAY);
     }
 
 }
