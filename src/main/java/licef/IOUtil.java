@@ -15,6 +15,8 @@ import org.apache.http.params.CoreConnectionPNames;
 
 public class IOUtil {
 
+    public static final String UTF8_BOM = "\uFEFF";
+
     /**
      * Returns true if path is an URL. 
      * @param s path to analyze.
@@ -400,12 +402,19 @@ public class IOUtil {
     public static Vector readLines( InputStream in )
     {
         Vector v = new Vector();
+        boolean firstLine = true;
         String nextLine;
         try
         {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            while((nextLine = br.readLine()) != null)
+            while((nextLine = br.readLine()) != null) {
+                if (firstLine) {
+                    if (nextLine.startsWith(UTF8_BOM))
+                        nextLine = nextLine.substring(1);
+                    firstLine = false;
+                }
                 v.addElement(nextLine);
+            }
             return v;
         }
         catch(IOException e){ System.out.println( e.toString() ); return null;}
