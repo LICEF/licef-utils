@@ -463,7 +463,8 @@ public class IOUtil {
             writer.write( str );
         }
         finally {
-            writer.close();
+            if (writer != null)
+                writer.close();
         }
     }
 
