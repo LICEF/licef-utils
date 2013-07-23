@@ -5,7 +5,7 @@
     <groupId>licef</groupId>
     <artifactId>licef-utils</artifactId>
     <packaging>jar</packaging>
-    <version>0.10.0</version>
+    <version>0.11.0</version>
     <name>Licef Util Library</name>
 
     <build>
@@ -32,18 +32,16 @@
     </dependencies>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>LicefNexusSnapshots</id>
-            <name>Licef's Maven Snapshot Repository</name>
-            <url>http://helios.licef.ca:8080/nexus/content/repositories/snapshots</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
         <repository>
-            <id>LicefNexusReleases</id>
-            <name>Licef's Maven Snapshot Repository</name>
-            <url>http://helios.licef.ca:8080/nexus/content/repositories/releases</url>
-            <uniqueVersion>false</uniqueVersion>
+            <id>licef</id>
+            <name>licef-releases</name>
+            <url>http://hades.licef.ca:8080/artifactory/libs-release-local</url>
         </repository>
+        <snapshotRepository>
+            <id>licef</id>
+            <name>licef-snapshots</name>
+            <url>http://hades.licef.ca:8080/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
     </distributionManagement>
 
 </project>
