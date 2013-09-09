@@ -457,9 +457,13 @@ public class IOUtil {
     
     
     public static void writeStringToFile( String str, File location ) throws IOException {
+        writeStringToFile( str, location, false );
+    }
+
+    public static void writeStringToFile( String str, File location, boolean append ) throws IOException {
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter( new FileWriter( location ) );
+            writer = new BufferedWriter( new FileWriter( location, append ) );
             writer.write( str );
         }
         finally {
