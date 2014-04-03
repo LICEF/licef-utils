@@ -57,15 +57,27 @@ public class XMLUtil {
      * @throws TransformerConfigurationException 
      * @throws TransformerException 
      */
-    public static String getXMLString( Node node ) throws TransformerConfigurationException, TransformerException {
+    public static String getXMLString( Node node, boolean omitXmlDeclaration ) throws TransformerConfigurationException, TransformerException {
         StringWriter writer = new StringWriter();
         DOMSource domSource = new DOMSource( node );
         StreamResult result = new StreamResult( writer );
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer serializer = tf.newTransformer();
         serializer.setOutputProperty( OutputKeys.INDENT, "yes" );
+        serializer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, omitXmlDeclaration ? "yes" : "no" );
         serializer.transform( domSource, result ); 
         return( writer.toString() );
+    }
+
+    /** 
+     * Returns the XML string representation of a Node.
+     * @param node Node to convert into XML string. 
+     * @return The XML string representation of the input node. 
+     * @throws TransformerConfigurationException 
+     * @throws TransformerException 
+     */
+    public static String getXMLString( Node node ) throws TransformerConfigurationException, TransformerException {
+        return( getXMLString( node, false ) );
     }
 
     /** 
