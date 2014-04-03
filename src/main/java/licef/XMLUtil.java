@@ -50,9 +50,24 @@ import org.xml.sax.SAXParseException;
 
 public class XMLUtil {
 
+    public static Node getFirstChildElementNode( Node node ) {
+        if( node == null )
+            return( null );
+
+        NodeList children = node.getChildNodes();
+        for( int i = 0; i < children.getLength(); i++ ) {
+            Node child = children.item( i );
+            if( Node.ELEMENT_NODE == child.getNodeType())
+                return( child );
+        }
+
+        return( null );
+    }
+    
     /** 
      * Returns the XML string representation of a Node.
      * @param node Node to convert into XML string. 
+     * @param omitXmlDeclaration <tt>true</tt> to remove the XML declaration from the string. 
      * @return The XML string representation of the input node. 
      * @throws TransformerConfigurationException 
      * @throws TransformerException 
@@ -70,7 +85,7 @@ public class XMLUtil {
     }
 
     /** 
-     * Returns the XML string representation of a Node.
+     * Returns the XML string representation of a Node.  The XML declaration will not be omitted.
      * @param node Node to convert into XML string. 
      * @return The XML string representation of the input node. 
      * @throws TransformerConfigurationException 
