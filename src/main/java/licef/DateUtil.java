@@ -3,6 +3,7 @@ package licef;
 import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 
 public class DateUtil {
 
@@ -88,4 +89,29 @@ public class DateUtil {
         return dateFormat.format(date.getTime() + MILLIS_IN_DAY);
     }
 
+    /**
+     * Compute duration between 2 dates
+     * @param date1: the start date
+     * @param date2: the end date
+     * @return Integer array with number of [days, hours, mins, secs]
+     */
+    public static long[] getDuration(Date date1, Date date2) {
+        return getDuration(date2.getTime() - date1.getTime());
+    }
+
+    public static long[] getDuration(long millis) {
+        if(millis < 0) {
+            throw new IllegalArgumentException("Duration must be greater than zero!");
+        }
+
+        long days = TimeUnit.MILLISECONDS.toDays(millis);
+        millis -= TimeUnit.DAYS.toMillis(days);
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        millis -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        millis -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+
+        return new long[]{days, hours, minutes, seconds};
+    }
 }
