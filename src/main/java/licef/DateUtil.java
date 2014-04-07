@@ -78,6 +78,16 @@ public class DateUtil {
     }
 
     /**
+     * Convert an ISO Date string to a java Date
+     * @param isoDate
+     * @return result as string
+     */
+    public static Date toDate(String isoDate) throws Exception {
+        String format = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+        return (new SimpleDateFormat(format)).parse(isoDate);
+    }
+
+    /**
      * Return next day as ISO date without time.
      * @param strDate in ISO format. Should be passed without time.
      * @return
