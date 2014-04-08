@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
+import org.w3c.util.DateParser;
+
 public class DateUtil {
 
     static int MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
@@ -83,8 +85,7 @@ public class DateUtil {
      * @return result as string
      */
     public static Date toDate(String isoDate) throws Exception {
-        String format = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-        return (new SimpleDateFormat(format)).parse(isoDate);
+        return( DateParser.parse( isoDate ).getTime() );
     }
 
     /**
