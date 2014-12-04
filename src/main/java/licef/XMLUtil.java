@@ -14,6 +14,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -505,8 +506,28 @@ public class XMLUtil {
         return res;
     }
 
-    public static String applyXslToDocument( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws IOException, TransformerConfigurationException, TransformerException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    /*
+     * Apply a XSL stylesheet on an XML document using the default XSLT implementation of the JVM and get the resulting String.
+     * implementation (e.g.: "net.sf.saxon.TransformerFactoryImpl" or "org.apache.xalan.processor.TransformerFactoryImpl").
+     */
+    public static String applyXslToDocument( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, TransformerConfigurationException, TransformerException {
+        return( applyXslToDocument( xslt, doc, resolver, transformerProperties, params, null ) );
+    }
+
+    /*
+     * Apply a XSL stylesheet on an XML document using a specific XSLT implementation and get the resulting String.
+     * (e.g.: "net.sf.saxon.TransformerFactoryImpl", "org.apache.xalan.processor.TransformerFactoryImpl").
+     */
+    public static String applyXslToDocument( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params, String transformerClassName ) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, TransformerConfigurationException, TransformerException {
+        TransformerFactory transformerFactory = null;
+        if( transformerClassName == null )
+            transformerFactory = TransformerFactory.newInstance();
+        else {
+            Class transformerClass = Class.forName( transformerClassName );
+            Constructor defaultConstructor = transformerClass.getConstructor( null );
+            transformerFactory = (TransformerFactory)transformerClass.newInstance();
+        }
+
         if( resolver != null )
             transformerFactory.setURIResolver( resolver );
         
@@ -527,8 +548,28 @@ public class XMLUtil {
         return( strWriter.toString() );
     }
 
-    public static Node applyXslToDocument2( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws IOException, TransformerConfigurationException, TransformerException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    /*
+     * Apply a XSL stylesheet on an XML document using the default XSLT implementation of the JVM and get a Node as a result.
+     * implementation (e.g.: "net.sf.saxon.TransformerFactoryImpl" or "org.apache.xalan.processor.TransformerFactoryImpl").
+     */
+    public static Node applyXslToDocument2( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params ) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, TransformerConfigurationException, TransformerException {
+        return( applyXslToDocument2( xslt, doc, resolver, transformerProperties, params, null ) );
+    }
+
+    /*
+     * Apply a XSL stylesheet on an XML document using a specific XSLT implementation and get a Node as a result. 
+     * (e.g.: "net.sf.saxon.TransformerFactoryImpl", "org.apache.xalan.processor.TransformerFactoryImpl").
+     */
+    public static Node applyXslToDocument2( Source xslt, Source doc, URIResolver resolver, Properties transformerProperties, HashMap<String,String> params, String transformerClassName ) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, TransformerConfigurationException, TransformerException {
+        TransformerFactory transformerFactory = null;
+        if( transformerClassName == null )
+            transformerFactory = TransformerFactory.newInstance();
+        else {
+            Class transformerClass = Class.forName( transformerClassName );
+            Constructor defaultConstructor = transformerClass.getConstructor( null );
+            transformerFactory = (TransformerFactory)transformerClass.newInstance();
+        }
+
         if( resolver != null )
             transformerFactory.setURIResolver( resolver );
         
