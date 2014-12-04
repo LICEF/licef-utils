@@ -77,15 +77,13 @@ public class Invoker implements Serializable {
             if (!tabm[i].getName().equals(method))
                 continue;
             Class[] paramTypes = tabm[i].getParameterTypes();
-            if (param == null) {
-                if (paramTypes.length != 0)
-                    continue;
-            } else {
-                if (paramTypes.length != param.length)
-                    continue;
-            }
+            int paramLength = (param == null)?0:param.length;
+            if (paramTypes.length != paramLength)
+                continue;
+
             // Même nom et même nombre de paramètres => méthode trouvée!!
             // On ne va pas jusqu'à tester le type des paramètres pour l'instant.
+            // pour les varArgs, passer un tableau vide a l'appel
             m = tabm[i];
             break;
         }
