@@ -34,6 +34,7 @@ public class ThreadInvoker extends Thread {
 //            Throwable throwable = ex1.getTargetException();
 //            System.out.println( throwable );
 //            throwable.printStackTrace();
+            ex1.printStackTrace();
             exception = ex1;
         } catch (Exception e) {
             System.out.println(e + " via " + invoker.method +
