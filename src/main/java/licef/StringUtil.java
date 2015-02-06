@@ -258,4 +258,23 @@ public class StringUtil {
 
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
+
+    public static String toCamelCase(String str) {
+        String result = "";
+        if (str.length() == 0)
+            return result;
+
+        String[] array = str.split(" ");
+        boolean isFirst = true;
+        for (String term : array) {
+            if (isFirst) {
+                result += term;
+                isFirst = false;
+            }
+            else
+                result += term.substring(0, 1).toUpperCase() + term.substring(1);
+        }
+        return result;
+    }
+
 }
