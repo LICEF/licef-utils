@@ -388,6 +388,17 @@ public class XMLUtil {
      * @return String result, XML or literal.
      */
     public static String[] getSubXML( String xml, String xpath ) throws Exception {
+        return getSubXML( new InputSource(new StringReader(xml)), xpath );
+    }
+
+    /**
+     * Returns the string result of the supplied XPath
+     *
+     * @param is  The source to be searched.
+     * @param xpath The XPath String to be used in the selection.
+     * @return String result, XML or literal.
+     */
+    public static String[] getSubXML( InputSource is, String xpath ) throws Exception {
         if (xpath == null || "".equals(xpath))
             return new String[]{};
         XPathFactory factory = XPathFactory.newInstance();
@@ -397,7 +408,7 @@ public class XMLUtil {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder builder = dbf.newDocumentBuilder();
-        Document document = builder.parse(new InputSource(new StringReader(xml)));
+        Document document = builder.parse(is);
         NodeList list = document.getDocumentElement().getChildNodes();
         NodeList s =  (NodeList)xPath.evaluate(xpath, list, XPathConstants.NODESET);
         String[] res = new String[s.getLength()];

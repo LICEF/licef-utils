@@ -461,6 +461,12 @@ public class IOUtil {
     }
 
     public static void writeStringToFile( String str, File location, boolean append ) throws IOException {
+        File destDir = location.getParentFile();
+        if (!destDir.exists()) {
+            if (!destDir.mkdirs())
+                throw (new IOException("copyFiles: Could not create directory: " + destDir.getAbsolutePath() + "."));
+        }
+
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter( new FileWriter( location, append ) );
@@ -561,7 +567,7 @@ public class IOUtil {
     * function can not be used to copy a directory to a sub directory of itself.
     * The function will also have problems if the destination files already exist.
     * @param src -- A File object that represents the source for the copy
-    * @param dest -- A File object that represnts the destination for the copy.
+    * @param dest -- A File object that represents the destination for the copy.
     * @throws IOException if unable to copy.
     */
     public static void copyFiles( File src, File dest ) throws IOException {
@@ -570,10 +576,12 @@ public class IOUtil {
         else if( !src.canRead() )
             throw( new IOException( "copyFiles: No right to source: " + src.getAbsolutePath() + "." ) );
 
-        if( src.isDirectory() ) {
+        if( src.isDirectory() ) { //folder copy
             if( !dest.exists() ) {
-                if( !dest.mkdirs() )
-                    throw( new IOException( "copyFiles: Could not create direcotry: " + dest.getAbsolutePath() + "." ) );
+                if (!dest.exists()) {
+                    if (!dest.mkdirs())
+                        throw (new IOException("copyFiles: Could not create directory: " + dest.getAbsolutePath() + "."));
+                }
             }
             String list[] = src.list();
             for( int i = 0; i < list.length; i++ ) {
@@ -582,9 +590,15 @@ public class IOUtil {
                 copyFiles( src1 , dest1 );
             }
         } 
-        else {
+        else { //file copy
             FileInputStream fin = null;
             FileOutputStream fout = null;
+            File destDir = dest.getParentFile();
+            if (!destDir.exists()) {
+                if (!destDir.mkdirs())
+                    throw (new IOException("copyFiles: Could not create directory: " + destDir.getAbsolutePath() + "."));
+            }
+
             try {
                 fin =  new FileInputStream( src );
                 fout = new FileOutputStream( dest );
