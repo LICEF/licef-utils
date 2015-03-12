@@ -34,6 +34,15 @@ public class CommonNamespaceContext implements NamespaceContext {
         return( instance );
     }
 
+    public String getNamespaceURIFromUri( String uri ) {
+        for( Iterator<String> it = namespaces.values().iterator(); it.hasNext(); ) {
+            String ns = it.next();
+            if( uri.startsWith( ns ) )
+                return( ns );
+        }
+        return( XMLConstants.NULL_NS_URI );
+    }
+
     public String getNamespaceURI( String prefix ) {
         if( namespaces.containsKey( prefix ) )
             return( (String)namespaces.get( prefix ) );
