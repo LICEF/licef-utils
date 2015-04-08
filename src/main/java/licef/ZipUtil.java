@@ -1,6 +1,10 @@
 package licef;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -11,9 +15,10 @@ public class ZipUtil {
      * Compress the content of a directory into a zip archive file.
      * @param sourceDir Directory containing the files to compress.  The directory itself will not be included in the zip file.
      * @param destinationFile Location of the zip file.  Children directory will be created if absent.  File will be overwritten if it exists.
+     * @param excludes list of folders to do not include in zip archive.
      * @return <code>true</code> if the zip file have been successfully created, <code>false</code> otherwise.
      */
-    public static boolean zipFile( String sourceDir, String destinationFile ) {
+    public static boolean zipFile( String sourceDir, String destinationFile, String... excludes ) {
         File srcDir = new File( sourceDir );
         if( !srcDir.exists() )
             return( false );
@@ -30,7 +35,7 @@ public class ZipUtil {
         ZipOutputStream zout = null;
         try {
             zout = new ZipOutputStream( new FileOutputStream( destFile ) );
-            zipFileRec( srcDir, "", zout );
+            zipFileRec( srcDir, "", zout, Arrays.asList(excludes));
         }
         catch( IOException ex ) {
             ex.printStackTrace();
@@ -49,7 +54,10 @@ public class ZipUtil {
         return( true );
     }
 
-    private static boolean zipFileRec( File srcDir, String path, ZipOutputStream zout ) throws IOException {
+    private static void zipFileRec( File srcDir, String path, ZipOutputStream zout, List excludes ) throws IOException {
+        if (excludes.contains(path))
+            return;
+
         File longPath = new File( srcDir, path );
         File[] files = longPath.listFiles();
         for( int i = 0; i < files.length; i++ ) {
@@ -57,7 +65,7 @@ public class ZipUtil {
             if( ".".equals( f.getName() ) || "..".equals( f.getName() ) )
                 continue;
             else if( f.isDirectory() )
-                zipFileRec( srcDir, path.length() == 0 ? f.getName() : path + "/" + f.getName(), zout );
+                zipFileRec( srcDir, path.length() == 0 ? f.getName() : path + "/" + f.getName(), zout, excludes );
             else {
                 InputStream in = null;
                 try {
@@ -73,8 +81,9 @@ public class ZipUtil {
                 }
             }
         }
-        return( true );
+
     }
+
 
     /**
      * Uncompress a zip archive file into a directory.
