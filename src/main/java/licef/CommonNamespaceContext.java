@@ -81,6 +81,7 @@ public class CommonNamespaceContext implements NamespaceContext {
         setPrefixNamespace( "vcard", vcardNSURI );
         setPrefixNamespace( "skos", skosNSURI );
         setPrefixNamespace( "foaf", foafNSURI );
+        setPrefixNamespace( "org", orgNSURI );
         setPrefixNamespace( "vdex", vdexNSURI );
         setPrefixNamespace( "fedora_management", fedora_managementNSURI );
         setPrefixNamespace( "comete", cometeNSURI );
