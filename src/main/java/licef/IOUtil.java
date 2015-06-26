@@ -30,6 +30,17 @@ public class IOUtil {
         }
     }
 
+    /**
+     * Returns true if path begins with an URI scheme
+     * @param s path to analyze.
+     */
+    public static boolean isURIScheme(String s) {
+        if (s == null || "".equals(s) || !s.contains(":"))
+            return false;
+        String scheme = s.substring(0, s.indexOf(":"));
+        return scheme.matches("[a-zA-Z][a-zA-Z0-9\\+\\-\\.]*");
+    }
+
     /** 
      * Get a file specified by an input URL and save it to a specified file. 
      * @param url URL of the file to fetch.
