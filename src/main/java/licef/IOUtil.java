@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 import java.net.*;
+import javax.activation.MimeType;
 import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.http.Header;
@@ -12,6 +13,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.tika.Tika;
+import org.apache.tika.mime.MimeTypes;
 
 public class IOUtil {
 
@@ -713,8 +716,16 @@ public class IOUtil {
         return( mimeTypes.getContentType( fileOrUrl ) );
     }
 
-    public static String getMimeType( String fileOrUrl ) throws IOException {
-        return( getMimeType( fileOrUrl, true, 3000 ) );
+    public static String getMimetype( File file ) throws Exception {
+        return (new Tika()).detect(file);
+    }
+
+    public static String getMimetype( URL url ) throws Exception {
+        return (new Tika()).detect(url);
+    }
+
+    public static String getExtension( String mimetype ) throws Exception {
+        return MimeTypes.getDefaultMimeTypes().forName(mimetype).getExtension();
     }
 
     private static void initMimeTypes() throws IOException {
@@ -740,6 +751,10 @@ public class IOUtil {
         }
         String[] aDefs = new String[ defs.size() ];
         return( defs.toArray( aDefs ) );
+    }
+
+    public static String getMimeType( String fileOrUrl ) throws IOException {
+        return( getMimeType( fileOrUrl, true, 3000 ) );
     }
 
     private static MimetypesFileTypeMap mimeTypes = null;

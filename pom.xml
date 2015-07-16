@@ -5,7 +5,7 @@
     <groupId>licef</groupId>
     <artifactId>licef-utils</artifactId>
     <packaging>jar</packaging>
-    <version>0.14.3</version>
+    <version>0.14.4</version>
     <name>Licef Util Library</name>
 
     <build>
@@ -37,6 +37,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.6</version>
         </dependency>
     </dependencies>
 
