@@ -672,91 +672,26 @@ public class IOUtil {
             return( "http://" + url );
     }
 
-    public static String getMimeType( String fileOrUrl, boolean useInternet, int timeout ) throws IOException {
-        URL url = null;
-        if (fileOrUrl.startsWith("http")) {
-            url = new URL( fileOrUrl );
-            if( useInternet ) {
-                HttpClient client = new DefaultHttpClient();
-                if( timeout > 0 ) {
-                    client.getParams().setParameter( CoreConnectionPNames.CONNECTION_TIMEOUT, new Integer( timeout ) );
-                    client.getParams().setParameter( CoreConnectionPNames.SO_TIMEOUT, new Integer( timeout ) );
-                }
-                try {
-                    HttpHead method = new HttpHead( fileOrUrl );
-                    HttpResponse resp = client.execute( method );
-                    if( resp.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK ) {
-                        Header header = resp.getFirstHeader( "Content-Type" );
-                        if( header != null  )
-                            return( StringUtil.split( header.getValue(), ';' )[0] );
-                    }
-                }
-                catch( Exception ignore ) {
-                    // If a problem occurs, we try to find the mime-type using the file extension.
-                }
-            }
-        }
+    /**
+     * Mimetype and extension
+     */
 
-        if( url != null ) {
-            String filename = url.getPath();
-            int indexOfLastSlash = filename.lastIndexOf( "/" );
-            if( indexOfLastSlash != -1 ) 
-                filename = filename.substring( indexOfLastSlash + 1 );
-            if( "".equals( filename ) ) {
-                if( fileOrUrl.startsWith( "http" ) )
-                    return( "text/html" );
-            }
-            else 
-                fileOrUrl = filename;
-        }
-
-        if( mimeTypes == null )
-            initMimeTypes();
-        
-        return( mimeTypes.getContentType( fileOrUrl ) );
+    public static String getMimeType(String val) throws Exception {
+        if (val.startsWith("http"))
+            return getMimeType(new URL(val));
+        else
+            return getMimeType(new File(val));
     }
 
-    public static String getMimetype( File file ) throws Exception {
+    public static String getMimeType( File file ) throws Exception {
         return (new Tika()).detect(file);
     }
 
-    public static String getMimetype( URL url ) throws Exception {
+    public static String getMimeType( URL url ) throws Exception {
         return (new Tika()).detect(url);
     }
 
     public static String getExtension( String mimetype ) throws Exception {
         return MimeTypes.getDefaultMimeTypes().forName(mimetype).getExtension();
     }
-
-    private static void initMimeTypes() throws IOException {
-        mimeTypes = new MimetypesFileTypeMap();
-        String[] mimeTypeDefinitions = getMimeTypeDefinitions();
-        for( int i = 0; i < mimeTypeDefinitions.length; i++ )
-            mimeTypes.addMimeTypes( mimeTypeDefinitions[ i ] );
-    }
-
-    private static String[] getMimeTypeDefinitions() throws IOException {
-        String line = null;
-        ArrayList<String> defs = new ArrayList<String>();
-        InputStream is = null;
-        try {
-            is = IOUtil.class.getResourceAsStream( "mime.types" );
-            BufferedReader in = new BufferedReader( new InputStreamReader( is ) );
-            while( ( line = in.readLine() ) != null ) {
-                defs.add( line );
-            }
-        }
-        finally {
-            is.close();
-        }
-        String[] aDefs = new String[ defs.size() ];
-        return( defs.toArray( aDefs ) );
-    }
-
-    public static String getMimeType( String fileOrUrl ) throws IOException {
-        return( getMimeType( fileOrUrl, true, 3000 ) );
-    }
-
-    private static MimetypesFileTypeMap mimeTypes = null;
-
 }
